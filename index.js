@@ -40,5 +40,5 @@ export async function getPinnedReference({ name, reference }) {
     pinnedReference = maxSatisfying;
   }
 
-  return { name, pinnedReference };
+  return { name, reference: pinnedReference };
 }
