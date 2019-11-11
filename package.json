@@ -6,12 +6,18 @@
   "author": "Priscila Oliveira <priscilawebdev@gmail.com>",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "start": "babel-node index.js"
+  },
   "dependencies": {
     "fs-extra": "^8.1.0",
     "node-fetch": "^2.6.0",
     "semver": "^6.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/node": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
     "@types/fs-extra": "^8.0.1",
     "@types/node-fetch": "^2.5.3",
     "@types/semver": "^6.2.0"
