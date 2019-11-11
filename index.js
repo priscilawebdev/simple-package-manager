@@ -2,6 +2,8 @@ import fs from 'fs-extra';
 import semver from 'semver';
 import fetch from 'node-fetch';
 
+import { readPackageJsonFromArchive } from './utils';
+
 async function fetchPackage({ name, reference }) {
   // In a pure JS fashion, if it looks like a path, it must be a path.
   if ([`/`, `./`, `../`].some(prefix => reference.startsWith(prefix)))
@@ -41,4 +43,21 @@ export async function getPinnedReference({ name, reference }) {
   }
 
   return { name, reference: pinnedReference };
+}
+
+export async function getPackageDependencies({ name, reference }) {
+  const packageBuffer = await fetchPackage({ name, reference });
+  const packageJson = JSON.parse(
+    await readPackageJsonFromArchive(packageBuffer)
+  );
+
+  // Some packages have no dependency field
+  const dependencies = packageJson.dependencies || {};
+
+  // It's much easier for us to just keep using the same {name, reference}
+  // data structure across all of our code, so we convert it there.
+  return Object.keys(dependencies).map(name => ({
+    name,
+    reference: dependencies[name]
+  }));
 }
