@@ -19,3 +19,5 @@ async function fetchPackage({ name, reference }) {
 
   return await response.buffer();
 }
+
+export default fetchPackage;
