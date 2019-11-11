@@ -9,14 +9,17 @@
   "scripts": {
     "start": "babel-node index.js",
     "test": "jest",
-    "install-self": "rm -rf temp && babel-node index . temp && rm -rf node_modules && mv temp/node_modules node_modules && rmdir temp"
+    "install-self": "rm -rf temp && babel-node index . temp"
   },
   "dependencies": {
     "fs-extra": "^8.1.0",
     "gunzip-maybe": "^1.4.1",
     "node-fetch": "^2.6.0",
+    "progress": "^2.0.3",
     "semver": "^6.3.0",
-    "tar-stream": "^2.1.0"
+    "tar-fs": "^2.0.0",
+    "tar-stream": "^2.1.0",
+    "util": "^0.12.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
