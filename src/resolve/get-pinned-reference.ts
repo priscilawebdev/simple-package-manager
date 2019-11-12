@@ -5,32 +5,37 @@ import fetchPackageInfo from '../fetch/fetch-package';
 
 const pinnedReferenceCache = new Map();
 
-async function getPinnedReference({ name, reference }) {
-  const cacheKey = `${name}/${reference}`;
+interface Props {
+  name: string;
+  version: string;
+}
+
+async function getPinnedReference({ name, version }: Props) {
+  const cacheKey = `${name}/${version}`;
 
   if (pinnedReferenceCache.get(cacheKey)) {
     return {
       name,
-      reference: pinnedReferenceCache.get(cacheKey)
+      version: pinnedReferenceCache.get(cacheKey)
     };
   }
 
-  if (!isPinnedReference(reference)) {
+  if (!isPinnedReference(version)) {
     const info = await fetchPackageInfo(name);
     const versions = Object.keys(info.versions);
-    const maxSatisfying = semver.maxSatisfying(versions, reference);
+    const maxSatisfying = semver.maxSatisfying(versions, version);
 
     if (maxSatisfying == null) {
       throw new Error(
-        `Could not find a version matching ${reference} for package ${name}`
+        `Could not find a version matching ${version} for package ${name}`
       );
     }
 
-    reference = maxSatisfying;
-    pinnedReferenceCache.set(cacheKey, reference);
+    version = maxSatisfying;
+    pinnedReferenceCache.set(cacheKey, version);
   }
 
-  return { name, reference };
+  return { name, version };
 }
 
 export default getPinnedReference;

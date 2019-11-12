@@ -1,20 +1,25 @@
-import Progress from 'process';
+import cliProgress from 'cli-progress';
+import chalk from 'chalk';
 
-async function trackProgress(cb: (value: any) => Promise<any>) {
-  // @ts-ignore Type 'Process' has no construct signatures.
-  const progress = new Progress(':bar :current/:total (:elapseds)', {
-    width: 80,
-    total: 1,
-    clear: true
+async function trackProgress(callback: any) {
+  // create new progress bar
+  const progress = new cliProgress.Bar({
+    format:
+      'CLI Progress |' +
+      chalk.cyan('{bar}') +
+      '| {percentage}% || {value}/{total} Chunks || Speed: {speed}',
+    barCompleteChar: '\u2588',
+    barIncompleteChar: '\u2591',
+    hideCursor: true
   });
 
   try {
-    return await cb(progress);
+    return await callback(progress);
   } finally {
-    if (!progress.complete) {
-      progress.update(1);
-      progress.terminate();
-    }
+    // update values
+    progress.update(1);
+    // // stop the bar
+    // progress.stop();
   }
 }
 

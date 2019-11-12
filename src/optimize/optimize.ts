@@ -1,24 +1,32 @@
-function optimizePackageTree({ name, reference, dependencies }) {
+function optimizePackageTree({
+  name,
+  version,
+  dependencies
+}: {
+  name: any;
+  version: any;
+  dependencies: any;
+}) {
   dependencies = dependencies.map(optimizePackageTree);
 
   for (let dependency of dependencies) {
     for (let sub of dependency.dependencies.slice()) {
-      const available = dependencies.find(d => d.name === sub.name);
+      const available = dependencies.find((d: any) => d.name === sub.name);
 
       if (!available) {
         dependencies.push(sub);
       }
 
-      if (!available || available.reference === sub.reference) {
+      if (!available || available.version === sub.reference) {
         const index = dependency.dependencies.findIndex(
-          d => d.name === sub.name
+          (d: any) => d.name === sub.name
         );
         dependency.dependencies.splice(index, 1);
       }
     }
   }
 
-  return { name, reference, dependencies };
+  return { name, version, dependencies };
 }
 
 export default optimizePackageTree;

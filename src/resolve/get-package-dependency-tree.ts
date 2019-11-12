@@ -2,56 +2,54 @@ import semver from 'semver';
 
 import getPinnedReference from './get-pinned-reference';
 import getPackageDependencies from './get-package-dependencies';
+import { Dependency } from '../typings';
 
 async function getPackageDependencyTree(
-  progress,
-  {
-    name,
-    reference,
-    dependencies
-  }: { name: string; reference?: any; dependencies: any },
+  progress: any,
+  dependency: Dependency,
   available = new Map()
-) {
+): Promise<Dependency> {
   return {
-    name,
-    reference,
-    dependencies: await Promise.all(
-      dependencies
-        .filter(dep => {
-          const availableReference = available.get(dep.name);
+    ...dependency,
+    dependencies:
+      dependency.dependencies &&
+      (await Promise.all(
+        dependency.dependencies
+          .filter((dep: Dependency) => {
+            const availableReference = available.get(dep.name);
 
-          // exact match
-          if (availableReference === dep.reference) {
-            return false;
-          }
+            // exact match
+            if (availableReference === dep.version) {
+              return false;
+            }
 
-          // inside valid range
-          if (
-            semver.validRange(dep.reference) &&
-            semver.satisfies(availableReference, dep.reference)
-          ) {
-            return false;
-          }
+            // inside valid range
+            if (
+              semver.validRange(dep.version) &&
+              semver.satisfies(availableReference, dep.version)
+            ) {
+              return false;
+            }
 
-          return true;
-        })
-        .map(async dep => {
-          progress.total += 1;
+            return true;
+          })
+          .map(async (dep: Dependency) => {
+            progress.total += 1;
 
-          const pinnedDep = await getPinnedReference(dep);
-          progress.tick();
+            const pinnedDep = await getPinnedReference(dep);
+            progress.tick();
 
-          const subDependencies = await getPackageDependencies(pinnedDep);
+            const subDependencies = await getPackageDependencies(pinnedDep);
 
-          available.set(pinnedDep.name, pinnedDep.reference);
+            available.set(pinnedDep.name, pinnedDep.version);
 
-          return getPackageDependencyTree(
-            progress,
-            { ...pinnedDep, dependencies: subDependencies },
-            available
-          );
-        })
-    )
+            return getPackageDependencyTree(
+              progress,
+              { ...pinnedDep, dependencies: subDependencies },
+              available
+            );
+          })
+      ))
   };
 }
 

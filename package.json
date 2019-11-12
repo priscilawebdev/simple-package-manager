@@ -5,31 +5,32 @@
   "repository": "git@github.com:priscilawebdev/simple-package-manager.git",
   "author": "Priscila Oliveira <priscilawebdev@gmail.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
+  "type": "module",
   "scripts": {
+    "start": "ts-node --files src/index.ts",
     "test": "jest"
   },
   "dependencies": {
     "chalk": "^3.0.0",
+    "cli-progress": "^3.3.1",
     "elapsed-time": "^0.0.1",
     "fs-extra": "^8.1.0",
     "gunzip-maybe": "^1.4.1",
     "node-fetch": "^2.6.0",
-    "progress": "^2.0.3",
     "semver": "^6.3.0",
     "tar-fs": "^2.0.0",
     "tar-stream": "^2.1.0",
     "util": "^0.12.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.2",
-    "@babel/node": "^7.7.0",
-    "@babel/preset-env": "^7.7.1",
+    "@types/cli-progress": "^1.8.1",
     "@types/fs-extra": "^8.0.1",
     "@types/node-fetch": "^2.5.3",
     "@types/semver": "^6.2.0",
     "@types/tar-fs": "^1.16.1",
     "jest": "^25.0.0",
+    "ts-node": "^8.5.0",
     "typescript": "^3.7.2"
   }
 }

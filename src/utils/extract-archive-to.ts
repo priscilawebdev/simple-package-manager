@@ -3,9 +3,13 @@ import gunzipMaybe from 'gunzip-maybe';
 
 import getFileName from '../utils/get-file-name';
 
-function extractArchiveTo(buffer, target, virtualPath = 0) {
+function extractArchiveTo(
+  buffer: any,
+  target: string,
+  virtualPath: number = 0
+) {
   return new Promise((resolve, reject) => {
-    const map = header => ({
+    const map = (header: any) => ({
       ...header,
       name: getFileName(header.name, virtualPath)
     });
