@@ -1,25 +1,19 @@
-import cliProgress from 'cli-progress';
-import chalk from 'chalk';
+import Progress from "progress";
 
-async function trackProgress(callback: any) {
-  // create new progress bar
-  const progress = new cliProgress.Bar({
-    format:
-      'CLI Progress |' +
-      chalk.cyan('{bar}') +
-      '| {percentage}% || {value}/{total} Chunks || Speed: {speed}',
-    barCompleteChar: '\u2588',
-    barIncompleteChar: '\u2591',
-    hideCursor: true
+function trackProgress(cb: Function) {
+  const progress = new Progress(":bar :current/:total (:elapseds)", {
+    width: 80,
+    total: 1,
+    clear: true
   });
 
   try {
-    return await callback(progress);
+    return cb(progress);
   } finally {
-    // update values
-    progress.update(1);
-    // // stop the bar
-    // progress.stop();
+    if (!progress.complete) {
+      progress.update(1);
+      progress.terminate();
+    }
   }
 }
 

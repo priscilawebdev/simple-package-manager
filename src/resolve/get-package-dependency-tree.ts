@@ -1,11 +1,12 @@
-import semver from 'semver';
+import semver from "semver";
+import Progress from "progress";
 
-import getPinnedReference from './get-pinned-reference';
-import getPackageDependencies from './get-package-dependencies';
-import { Dependency } from '../typings';
+import getPinnedReference from "./get-pinned-reference";
+import getPackageDependencies from "./get-package-dependencies";
+import { Dependency } from "../typings";
 
 async function getPackageDependencyTree(
-  progress: any,
+  progress: Progress,
   dependency: Dependency,
   available = new Map()
 ): Promise<Dependency> {

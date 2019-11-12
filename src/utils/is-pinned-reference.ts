@@ -1,6 +1,6 @@
-import semver from 'semver';
+import semver from "semver";
 
-const isPinnedReference = (ref: string | semver.SemVer) =>
-  semver.valid(ref) != null;
+const isPinnedReference = (version: string | semver.SemVer) =>
+  semver.valid(version) != null;
 
 export default isPinnedReference;

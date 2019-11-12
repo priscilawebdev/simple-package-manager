@@ -1,34 +1,35 @@
-import chalk from 'chalk';
-import path from 'path';
-import ElapstedTime from 'elapsed-time';
-import fs from 'fs-extra';
+import chalk from "chalk";
+import path from "path";
+import ElapstedTime from "elapsed-time";
+import fs from "fs-extra";
+import Progress from "progress";
 
-import trackProgress from './utils/track-process';
+import trackProgress from "./utils/track-process";
 // import fetchPackages from './fetch/fetch-packages';
-import getPackageDependencyTree from './resolve/get-package-dependency-tree';
+import getPackageDependencyTree from "./resolve/get-package-dependency-tree";
 // import linkPackages from './link/link-packages';
-import { transformDependencies } from './utils';
-import { Dependency } from './typings';
+import { transformDependencies } from "./utils";
+import { Dependency } from "./typings";
 // import optimizePackageTree from './optimize';
 
-process.on('unhandledRejection', (reason, p) => {
-  console.log('unhandled promise rejection: ', p, 'reason:', reason);
+process.on("unhandledRejection", (reason, p) => {
+  console.log("unhandled promise rejection: ", p, "reason:", reason);
   process.exit(1);
 });
 
 // print help info
 const arg = process.argv[2];
-if (arg === 'help' || arg === '-h' || arg === '--help') {
-  console.log('A simple nodejs package manager');
+if (arg === "help" || arg === "-h" || arg === "--help") {
+  console.log("A simple nodejs package manager");
   process.exit(0);
 }
 
 const cwd = process.cwd();
-const packageJSONPath = path.resolve(cwd, 'package.json');
+const packageJSONPath = path.resolve(cwd, "package.json");
 
 // it verifies if a package.json file exists
 if (!fs.existsSync(packageJSONPath)) {
-  console.log(chalk.red('whoops! no package.json found 😝'));
+  console.log(chalk.red("whoops! no package.json found 😝"));
   process.exit(1);
 }
 
@@ -46,9 +47,8 @@ if (packageJSON && packageJSON.dependencies) {
 const et = ElapstedTime.new().start();
 
 Promise.resolve().then(() => {
-  console.log('[1/3] 🔎  Resolving packages...');
-  //@ts-ignore
-  return trackProgress(progress => {
+  console.log("[1/3] 🔎  Resolving packages...");
+  return trackProgress((progress: Progress) => {
     return getPackageDependencyTree(progress, {
       name: packageJSON.name,
       version: packageJSON.version,
